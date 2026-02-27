@@ -3,167 +3,175 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Secure Access</title>
+<title>Encrypted Access</title>
 
 <style>
-body {
-    margin: 0;
-    height: 100vh;
-    background-color: #000;
-    color: #7CFC00;
-    font-family: monospace;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    overflow: hidden;
-}
+    body {
+        margin: 0;
+        background-color: black;
+        color: #00ff88;
+        font-family: 'Courier New', monospace;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        text-align: center;
+        flex-direction: column;
+    }
 
-/* Background Emblem */
-body::before {
-    content: "";
-    position: absolute;
-    width: 500px;
-    height: 500px;
-    background: url('emblem.PNG') no-repeat center;
-    background-size: contain;
-    opacity: 0.08;
-    filter: drop-shadow(0 0 25px rgba(212,175,55,0.4));
-    animation: pulse 6s infinite ease-in-out;
-}
+    /* Background emblem */
+    body::before {
+        content: "";
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: url("emblem.PNG") center/contain no-repeat;
+        opacity: 0.08;
+        z-index: 0;
+    }
 
-@keyframes pulse {
-    0%, 100% { opacity: 0.06; }
-    50% { opacity: 0.12; }
-}
+    .screen {
+        position: relative;
+        z-index: 2;
+        padding: 20px;
+        max-width: 90%;
+    }
 
-/* Terminal */
-#terminal {
-    position: relative;
-    z-index: 2;
-    max-width: 400px;
-}
+    #bootText {
+        font-size: 1rem;
+        letter-spacing: 2px;
+        min-height: 24px;
+    }
 
-/* ACCESS GRANTED */
-#granted {
-    display: none;
-    font-size: 2em;
-    letter-spacing: 3px;
-    color: #D4AF37;
-    font-weight: bold;
-}
+    /* Random glitch effect */
+    .glitch {
+        animation: glitch 0.2s infinite;
+    }
 
-/* Button */
-.button {
-    display: none;
-    margin-top: 30px;
-    padding: 14px 28px;
-    border: 1px solid #D4AF37;
-    color: #D4AF37;
-    text-decoration: none;
-    transition: 0.3s ease;
-    font-family: Arial, sans-serif;
-}
+    @keyframes glitch {
+        0% { transform: translate(0); }
+        20% { transform: translate(-2px, 2px); }
+        40% { transform: translate(2px, -2px); }
+        60% { transform: translate(-2px, -2px); }
+        80% { transform: translate(2px, 2px); }
+        100% { transform: translate(0); }
+    }
 
-.button:hover {
-    background-color: #D4AF37;
-    color: black;
-}
+    .access-container {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: 40px;
+    }
 
-/* Random glitch distortion */
-.distort {
-    animation: distort 0.15s linear;
-}
+    #accessText {
+        font-size: 2.5rem;
+        letter-spacing: 5px;
+        color: #d4af37;
+        position: relative;
+        overflow: hidden;
+    }
 
-@keyframes distort {
-    0% { transform: skew(0deg); }
-    25% { transform: skew(8deg); }
-    50% { transform: skew(-8deg); }
-    75% { transform: skew(4deg); }
-    100% { transform: skew(0deg); }
-}
+    /* Gold shimmer */
+    #accessText::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            120deg,
+            transparent 30%,
+            rgba(255,215,0,0.9),
+            transparent 70%
+        );
+        animation: shimmer 2.5s ease-in-out forwards;
+    }
 
-.fade-in {
-    animation: fadeIn 1s ease forwards;
-}
+    @keyframes shimmer {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
+    #decryptBtn {
+        margin-top: 30px;
+        padding: 12px 28px;
+        font-size: 1rem;
+        letter-spacing: 2px;
+        background: transparent;
+        border: 2px solid #d4af37;
+        color: #d4af37;
+        cursor: pointer;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.6s ease;
+    }
+
+    #decryptBtn:hover {
+        background: #d4af37;
+        color: black;
+        box-shadow: 0 0 15px #d4af37;
+    }
+
+    .show-button {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+    }
+
 </style>
 </head>
 
 <body>
 
-<div id="terminal">
-    <p id="line1"></p>
-    <p id="line2"></p>
+<div class="screen">
+    <div id="bootText"></div>
+
+    <div class="access-container" id="accessContainer">
+        <h1 id="accessText">ACCESS GRANTED</h1>
+        <button id="decryptBtn" onclick="location.href='profile.html'">
+            Decrypt File
+        </button>
+    </div>
 </div>
 
-<div id="granted">ACCESS GRANTED</div>
-
-<a href="profile.html" id="decryptBtn" class="button">Decrypt File</a>
-
 <script>
-const line1 = document.getElementById("line1");
-const line2 = document.getElementById("line2");
-const terminal = document.getElementById("terminal");
-const granted = document.getElementById("granted");
-const button = document.getElementById("decryptBtn");
 
-let glitchInterval;
+const bootMessages = [
+    "Establishing secure connection...",
+    "Routing through encrypted node...",
+    "Verifying clearance...",
+];
 
-function randomGlitch() {
-    const randomTime = Math.random() * 2000 + 500;
-    glitchInterval = setTimeout(() => {
-        terminal.classList.add("distort");
+let index = 0;
+const bootText = document.getElementById("bootText");
+
+function showBootSequence() {
+    if (index < bootMessages.length) {
+        bootText.textContent = bootMessages[index];
+
+        // Random glitch bursts
+        bootText.classList.add("glitch");
+        setTimeout(() => bootText.classList.remove("glitch"), 300);
+
+        index++;
+        setTimeout(showBootSequence, 2000);
+    } else {
+        bootText.style.display = "none";
+        document.getElementById("accessContainer").style.display = "flex";
+
+        // Delay button appearance
         setTimeout(() => {
-            terminal.classList.remove("distort");
-        }, 150);
-        randomGlitch();
-    }, randomTime);
-}
-
-function stopGlitch() {
-    clearTimeout(glitchInterval);
-}
-
-function typeText(element, text, delay, callback) {
-    let i = 0;
-    function typing() {
-        if (i < text.length) {
-            element.innerHTML += text.charAt(i);
-            i++;
-            setTimeout(typing, delay);
-        } else if (callback) {
-            callback();
-        }
+            document.getElementById("decryptBtn")
+                .classList.add("show-button");
+        }, 2000);
     }
-    typing();
 }
 
-randomGlitch();
+showBootSequence();
 
-typeText(line1, "Establishing secure connection...", 30, function() {
-    setTimeout(() => {
-        typeText(line2, "Verifying clearance...", 30, function() {
-            setTimeout(() => {
-                stopGlitch();
-                terminal.style.display = "none";
-                
-                granted.style.display = "block";
-                granted.classList.add("fade-in");
-
-                setTimeout(() => {
-                    button.style.display = "inline-block";
-                    button.classList.add("fade-in");
-                }, 2000);
-
-            }, 1200);
-        });
-    }, 800);
-});
 </script>
 
 </body>
