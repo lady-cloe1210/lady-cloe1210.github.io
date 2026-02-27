@@ -3,133 +3,162 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CLASSIFIED: Cloe</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<title>Secure Access</title>
 
 <style>
 body {
     margin: 0;
-    font-family: 'Inter', sans-serif;
-    background-color: #0b0f0c;
-    color: #e8e8e8;
-    text-align: center;
-    padding: 20px;
-}
-
-h1, h2 {
-    font-family: 'Cinzel', serif;
-    letter-spacing: 1px;
-}
-
-.section {
-    margin: 60px 0;
-}
-
-.glow {
+    height: 100vh;
+    background: radial-gradient(circle at center, #0d0f0d 0%, #000 70%);
     color: #7CFC00;
+    font-family: monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
 }
 
+/* EMBLEM */
+.emblem {
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    border: 3px solid rgba(212,175,55,0.3);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 25px rgba(212,175,55,0.2);
+}
+
+.emblem::before {
+    content: "";
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-top: 4px solid rgba(212,175,55,0.5);
+    border-left: 4px solid rgba(212,175,55,0.5);
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+}
+
+.emblem::after {
+    content: "C";
+    position: absolute;
+    font-size: 120px;
+    color: rgba(212,175,55,0.15);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: serif;
+}
+
+/* TERMINAL */
+#terminal {
+    position: relative;
+    z-index: 2;
+    width: 90%;
+    max-width: 400px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* BUTTON */
 .button {
     display: inline-block;
-    padding: 12px 24px;
-    border: 1px solid #7CFC00;
-    color: #7CFC00;
-    text-decoration: none;
     margin-top: 20px;
+    padding: 12px 24px;
+    border: 1px solid #D4AF37;
+    color: #D4AF37;
+    text-decoration: none;
     transition: 0.3s ease;
+    font-family: Arial, sans-serif;
 }
 
 .button:hover {
-    background-color: #7CFC00;
-    color: #0b0f0c;
+    background-color: #D4AF37;
+    color: black;
 }
 
-.card {
-    background: #121a15;
-    padding: 20px;
-    margin: 15px 0;
-    border-radius: 8px;
+/* GLITCH */
+.glitch {
+    animation: glitch 0.4s linear 2;
 }
 
-input, textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-    background: #1b241e;
-    border: 1px solid #7CFC00;
-    color: white;
+@keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(2px, -2px); }
+    60% { transform: translate(-2px, -1px); }
+    80% { transform: translate(2px, 1px); }
+    100% { transform: translate(0); }
 }
 
-footer {
-    margin-top: 50px;
-    font-size: 0.8em;
-    opacity: 0.6;
+.fade-in {
+    animation: fadeIn 1.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 </style>
 </head>
 
 <body>
 
-<div class="section">
-    <h1>FILE ACCESSED</h1>
-    <p class="glow">Identity Scan Complete</p>
-    <h2>Subject: Cloe</h2>
-    <p>So… you scanned the code.</p>
-    <a href="#origin" class="button">Decrypt Profile</a>
+<div class="emblem"></div>
+
+<div id="terminal">
+    <p id="line1"></p>
+    <p id="line2"></p>
 </div>
 
-<div id="origin" class="section">
-    <h2 class="glow">ORIGIN STORY</h2>
-    <div class="card">
-        <p>Mother. Music lover. Emotionally intelligent with a sarcastic streak.</p>
-        <p>Currently entering a new era — fresh chapter, healed edges, main character energy fully activated.</p>
-        <p>I value depth. Wit. Consistency. And yes… a little chaos (the controlled kind).</p>
-    </div>
+<div id="mainContent" class="hidden">
+    <h1 style="color:#D4AF37;">FILE ACCESSED</h1>
+    <p style="color:#7CFC00;">Identity Scan Complete.</p>
+    <a href="profile.html" class="button">Decrypt Profile</a>
 </div>
 
-<div class="section">
-    <h2 class="glow">CANON INTERESTS</h2>
-    <div class="card">Marvel. Especially morally complex characters.</div>
-    <div class="card">Loki (specifically Ragnarok era energy).</div>
-    <div class="card">Music that emotionally ruins you in the best way.</div>
-    <div class="card">Tattoos. Symbolism. Stories beneath the surface.</div>
-    <div class="card">Healing. Growth. Becoming dangerous in a calm way.</div>
-</div>
+<script>
+const line1 = document.getElementById("line1");
+const line2 = document.getElementById("line2");
+const terminal = document.getElementById("terminal");
+const mainContent = document.getElementById("mainContent");
 
-<div class="section">
-    <h2 class="glow">ALIGNMENT CHECK</h2>
-    <div class="card">
-        <p><strong>Not Seeking:</strong></p>
-        <p>Situationships disguised as “vibes.”</p>
-        <p>Emotional unavailability with good lighting.</p>
-        <p>Inconsistency.</p>
-    </div>
+function typeText(element, text, delay, callback) {
+    let i = 0;
+    function typing() {
+        if (i < text.length) {
+            element.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(typing, delay);
+        } else if (callback) {
+            callback();
+        }
+    }
+    typing();
+}
 
-    <div class="card">
-        <p><strong>Seeking:</strong></p>
-        <p>Emotional maturity.</p>
-        <p>Consistency.</p>
-        <p>Playful intelligence.</p>
-        <p>Someone who understands that friendship is the foundation of attraction.</p>
-    </div>
-</div>
-
-<div class="section">
-    <h2 class="glow">INTEREST REQUEST FORM</h2>
-    <form action="https://formspree.io/f/yourformid" method="POST">
-        <input type="text" name="name" placeholder="Name / Alias" required>
-        <input type="text" name="single" placeholder="Are you actually single?" required>
-        <input type="text" name="marvel" placeholder="Favorite Marvel character (this is a test)" required>
-        <textarea name="why" rows="4" placeholder="Why should I share popcorn with you?"></textarea>
-        <button type="submit" class="button">Initiate Contact</button>
-    </form>
-</div>
-
-<footer>
-    Last Updated: 2026 <br>
-    Proceed intentionally.
-</footer>
+typeText(line1, "Establishing secure connection...", 35, function() {
+    setTimeout(() => {
+        typeText(line2, "Verifying clearance...", 35, function() {
+            setTimeout(() => {
+                document.body.classList.add("glitch");
+                setTimeout(() => {
+                    terminal.style.display = "none";
+                    mainContent.classList.remove("hidden");
+                    mainContent.classList.add("fade-in");
+                }, 500);
+            }, 1200);
+        });
+    }, 800);
+});
+</script>
 
 </body>
 </html>
