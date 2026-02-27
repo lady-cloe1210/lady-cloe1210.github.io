@@ -41,21 +41,21 @@
     #bootText {
         font-size: 1rem;
         letter-spacing: 2px;
-        min-height: 24px;
+        min-height: 28px;
     }
 
-    /* Random glitch effect */
+    /* Stronger glitch effect */
     .glitch {
-        animation: glitch 0.2s infinite;
+        animation: glitch 0.15s infinite;
     }
 
     @keyframes glitch {
-        0% { transform: translate(0); }
-        20% { transform: translate(-2px, 2px); }
-        40% { transform: translate(2px, -2px); }
-        60% { transform: translate(-2px, -2px); }
-        80% { transform: translate(2px, 2px); }
-        100% { transform: translate(0); }
+        0% { transform: translate(0); opacity: 1; }
+        20% { transform: translate(-3px, 3px); opacity: 0.8; }
+        40% { transform: translate(3px, -3px); opacity: 0.9; }
+        60% { transform: translate(-3px, -3px); opacity: 0.7; }
+        80% { transform: translate(3px, 3px); opacity: 0.85; }
+        100% { transform: translate(0); opacity: 1; }
     }
 
     .access-container {
@@ -142,31 +142,51 @@
 const bootMessages = [
     "Establishing secure connection...",
     "Routing through encrypted node...",
-    "Verifying clearance...",
+    "Verifying clearance credentials..."
 ];
 
 let index = 0;
 const bootText = document.getElementById("bootText");
 
+function typeText(text, callback) {
+    let charIndex = 0;
+    bootText.textContent = "";
+
+    const typing = setInterval(() => {
+        bootText.textContent += text.charAt(charIndex);
+        charIndex++;
+
+        // Random glitch bursts during typing
+        if (Math.random() < 0.15) {
+            bootText.classList.add("glitch");
+            setTimeout(() => bootText.classList.remove("glitch"), 150);
+        }
+
+        if (charIndex >= text.length) {
+            clearInterval(typing);
+            setTimeout(callback, 1200);
+        }
+    }, 40);
+}
+
 function showBootSequence() {
     if (index < bootMessages.length) {
-        bootText.textContent = bootMessages[index];
-
-        // Random glitch bursts
-        bootText.classList.add("glitch");
-        setTimeout(() => bootText.classList.remove("glitch"), 300);
-
-        index++;
-        setTimeout(showBootSequence, 2000);
+        typeText(bootMessages[index], () => {
+            index++;
+            showBootSequence();
+        });
     } else {
-        bootText.style.display = "none";
-        document.getElementById("accessContainer").style.display = "flex";
-
-        // Delay button appearance
+        // Longer dramatic pause on verification
         setTimeout(() => {
-            document.getElementById("decryptBtn")
-                .classList.add("show-button");
-        }, 2000);
+            bootText.style.display = "none";
+            document.getElementById("accessContainer").style.display = "flex";
+
+            setTimeout(() => {
+                document.getElementById("decryptBtn")
+                    .classList.add("show-button");
+            }, 2000);
+
+        }, 1800);
     }
 }
 
