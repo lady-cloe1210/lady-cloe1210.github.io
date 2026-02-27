@@ -25,7 +25,7 @@ body::before {
     position: absolute;
     width: 500px;
     height: 500px;
-    background: url('IMG_3350.png') no-repeat center;
+    background: url('emblem.PNG') no-repeat center;
     background-size: contain;
     opacity: 0.08;
     filter: drop-shadow(0 0 25px rgba(212,175,55,0.4));
@@ -37,68 +37,27 @@ body::before {
     50% { opacity: 0.12; }
 }
 
-/* Terminal Container */
+/* Terminal */
 #terminal {
     position: relative;
     z-index: 2;
     max-width: 400px;
 }
 
-/* Glitch Text */
-.glitch {
-    position: relative;
-    color: #D4AF37;
-    font-size: 1.2em;
-    display: inline-block;
-}
-
-.glitch::before,
-.glitch::after {
-    content: attr(data-text);
-    position: absolute;
-    left: 0;
-    width: 100%;
-    overflow: hidden;
-}
-
-.glitch::before {
-    animation: glitchTop 2s infinite linear alternate-reverse;
-    color: #7CFC00;
-    clip-path: inset(0 0 50% 0);
-}
-
-.glitch::after {
-    animation: glitchBottom 1.5s infinite linear alternate-reverse;
-    color: #ff0040;
-    clip-path: inset(50% 0 0 0);
-}
-
-@keyframes glitchTop {
-    0% { transform: translate(0); }
-    20% { transform: translate(-2px, -2px); }
-    40% { transform: translate(-3px, 2px); }
-    60% { transform: translate(2px, -1px); }
-    80% { transform: translate(-1px, 2px); }
-    100% { transform: translate(0); }
-}
-
-@keyframes glitchBottom {
-    0% { transform: translate(0); }
-    20% { transform: translate(2px, 2px); }
-    40% { transform: translate(3px, -1px); }
-    60% { transform: translate(-2px, 1px); }
-    80% { transform: translate(1px, -2px); }
-    100% { transform: translate(0); }
-}
-
-.hidden {
+/* ACCESS GRANTED */
+#granted {
     display: none;
+    font-size: 2em;
+    letter-spacing: 3px;
+    color: #D4AF37;
+    font-weight: bold;
 }
 
+/* Button */
 .button {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 12px 24px;
+    display: none;
+    margin-top: 30px;
+    padding: 14px 28px;
     border: 1px solid #D4AF37;
     color: #D4AF37;
     text-decoration: none;
@@ -111,8 +70,21 @@ body::before {
     color: black;
 }
 
+/* Random glitch distortion */
+.distort {
+    animation: distort 0.15s linear;
+}
+
+@keyframes distort {
+    0% { transform: skew(0deg); }
+    25% { transform: skew(8deg); }
+    50% { transform: skew(-8deg); }
+    75% { transform: skew(4deg); }
+    100% { transform: skew(0deg); }
+}
+
 .fade-in {
-    animation: fadeIn 1.5s ease forwards;
+    animation: fadeIn 1s ease forwards;
 }
 
 @keyframes fadeIn {
@@ -129,17 +101,33 @@ body::before {
     <p id="line2"></p>
 </div>
 
-<div id="mainContent" class="hidden">
-    <h1 class="glitch" data-text="FILE ACCESSED">FILE ACCESSED</h1>
-    <p style="color:#7CFC00;">Identity Verified.</p>
-    <a href="profile.html" class="button">Decrypt Profile</a>
-</div>
+<div id="granted">ACCESS GRANTED</div>
+
+<a href="profile.html" id="decryptBtn" class="button">Decrypt File</a>
 
 <script>
 const line1 = document.getElementById("line1");
 const line2 = document.getElementById("line2");
 const terminal = document.getElementById("terminal");
-const mainContent = document.getElementById("mainContent");
+const granted = document.getElementById("granted");
+const button = document.getElementById("decryptBtn");
+
+let glitchInterval;
+
+function randomGlitch() {
+    const randomTime = Math.random() * 2000 + 500;
+    glitchInterval = setTimeout(() => {
+        terminal.classList.add("distort");
+        setTimeout(() => {
+            terminal.classList.remove("distort");
+        }, 150);
+        randomGlitch();
+    }, randomTime);
+}
+
+function stopGlitch() {
+    clearTimeout(glitchInterval);
+}
 
 function typeText(element, text, delay, callback) {
     let i = 0;
@@ -155,13 +143,23 @@ function typeText(element, text, delay, callback) {
     typing();
 }
 
+randomGlitch();
+
 typeText(line1, "Establishing secure connection...", 30, function() {
     setTimeout(() => {
         typeText(line2, "Verifying clearance...", 30, function() {
             setTimeout(() => {
+                stopGlitch();
                 terminal.style.display = "none";
-                mainContent.classList.remove("hidden");
-                mainContent.classList.add("fade-in");
+                
+                granted.style.display = "block";
+                granted.classList.add("fade-in");
+
+                setTimeout(() => {
+                    button.style.display = "inline-block";
+                    button.classList.add("fade-in");
+                }, 2000);
+
             }, 1200);
         });
     }, 800);
